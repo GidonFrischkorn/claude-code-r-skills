@@ -23,6 +23,8 @@
   "commands": ["./commands/"],
   "agents": [
     "./agents/planner.md",
-    "./agents/code-reviewer.md"
-  ]
+    "./agents/code-reviewer.md",
+    "./agents/tdd-guide.md"
+  ],
+  "contexts": ["./contexts/"]
 }

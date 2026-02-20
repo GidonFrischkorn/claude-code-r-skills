@@ -1,5 +1,7 @@
 # Claude Code R Skills
 
+*Last updated: 2026-02-20*
+
 A curated collection of Claude Code configurations for modern R use. These skills, rules, commands, and agents help Claude Code understand R best practices and generate idiomatic, high-quality R code. Additionally the rules and commands help with efficient token usage and enforce constraints, and agents can perform specific tasks. Obviously you can fork and adapt any of these to your case-use.
 
 I use Positron, but if you are a VSCode user there is also a plugin for R language server for code intelligence.
@@ -14,6 +16,7 @@ I use Positron, but if you are a VSCode user there is also a plugin for R langua
     -   [Rules](#rules)
     -   [Agents](#agents)
     -   [Hooks](#hooks)
+    -   [Contexts](#contexts)
 -   [Features](#features)
 -   [Installation](#installation)
     -   [Option 1: Plugin Marketplace](#option-1-plugin-marketplace-recommended)
@@ -147,9 +150,39 @@ yes  # or "proceed" to start implementation
 # - session-start: Reports available history on startup
 # - session-end: Persists session state for continuity
 # - doc-blocker: Warns about creating random .md files
+# - git-push-warning: Warns before any git push
 
 # Hooks are transparent - you'll see their output in the session:
 [Hook] Context window usage: 45/50 tool calls. Consider /compact soon.
+[Hook] WARNING: About to run: git push origin main
+[Hook] Confirm this push is intentional before proceeding.
+```
+
+### Contexts
+
+**What they are:** Mode-switching markdown files that adjust Claude's behaviour for different phases of work — coding, exploring, or reviewing.
+
+**When to use:** Reference a context file when you want to shift Claude's focus. Use `dev` when writing code, `research` when exploring unfamiliar territory, and `review` when auditing changes.
+
+**How they work:** Context files live in `contexts/` and contain behavioural instructions, tool priorities, and checklists. Reference them with `@contexts/dev.md` in your conversation or CLAUDE.md.
+
+**How to use:**
+
+``` bash
+# Switch to focused coding mode:
+@contexts/dev.md
+
+# Switch to thorough exploration mode:
+@contexts/research.md
+
+# Switch to quality review mode:
+@contexts/review.md
+```
+
+**Recommended workflow sequence:**
+
+```
+research → plan → tdd → dev → verify → review → commit
 ```
 
 ## Features
@@ -175,11 +208,12 @@ yes  # or "proceed" to start implementation
 
 ### Commands
 
-| Command        | Description                               |
-|----------------|-------------------------------------------|
-| `/plan`        | Create implementation plans before coding |
-| `/code-review` | Review code for security and quality      |
-| `/tdd`         | Test-driven development workflow          |
+| Command        | Description                                        |
+|----------------|----------------------------------------------------|
+| `/plan`        | Create implementation plans before coding          |
+| `/tdd`         | Test-driven development workflow                   |
+| `/code-review` | Review code for security and quality               |
+| `/verify`      | Full quality gate before committing (build → lint → coverage → review) |
 
 ### Rules
 
@@ -191,26 +225,37 @@ yes  # or "proceed" to start implementation
 
 ### Agents
 
-| Agent             | Description                        |
-|-------------------|------------------------------------|
-| **planner**       | Implementation planning specialist |
-| **code-reviewer** | Security and quality review        |
+| Agent             | Model | Description                        |
+|-------------------|-------|------------------------------------|
+| **planner**       | Opus  | Implementation planning specialist |
+| **tdd-guide**     | —     | TDD enforcement and test-first workflow |
+| **code-reviewer** | —     | Security and quality review        |
 
 ### Hooks (Context Window Management)
 
 | Hook | Trigger | Description |
-|------------------|----------------------|--------------------------------|
+|---------------------|------------------------|--------------------------------|
 | **suggest-compact** | PreToolUse (Edit/Write) | Suggests `/compact` after 50 tool calls, then every 25 |
 | **pre-compact** | PreCompact | Saves session state before context compaction |
 | **session-start** | SessionStart | Reports available session history and learned skills |
 | **session-end** | SessionEnd | Persists session state for continuity |
 | **doc-blocker** | PreToolUse (Write .md) | Warns about creating random .md files |
+| **git-push-warning** | PreToolUse (Bash) | Warns before any `git push` to prevent accidental pushes |
 
-These hooks help optimise context window usage by:
+These hooks help optimise context window usage and workflow safety by:
 
 -   Suggesting strategic compaction at logical task boundaries
 -   Preserving session state across compaction events
 -   Consolidating documentation to reduce context bloat
+-   Requiring confirmation before irreversible git operations
+
+### Contexts
+
+| Context      | Description                                        |
+|--------------|----------------------------------------------------|
+| **dev**      | Coding mode — write first, short responses, TDD defaults |
+| **research** | Exploration mode — thorough reading before acting  |
+| **review**   | Audit mode — find issues, rate by severity, verdict |
 
 ## Installation
 
@@ -247,6 +292,7 @@ cp -r claude-code-r-skills/.claude/ /path/to/your/project/
 cp -r claude-code-r-skills/rules/ /path/to/your/project/
 cp -r claude-code-r-skills/commands/ /path/to/your/project/
 cp -r claude-code-r-skills/agents/ /path/to/your/project/
+cp -r claude-code-r-skills/contexts/ /path/to/your/project/
 ```
 
 ### Option 3: Copy to user configuration
@@ -255,10 +301,11 @@ cp -r claude-code-r-skills/agents/ /path/to/your/project/
 # Copy skills to global config
 cp -r .claude/skills/* ~/.claude/skills/
 
-# Copy rules, commands, agents
+# Copy rules, commands, agents, contexts
 cp -r rules/* ~/.claude/rules/
 cp -r commands/* ~/.claude/commands/
 cp -r agents/* ~/.claude/agents/
+cp -r contexts/* ~/.claude/contexts/
 ```
 
 ## Quick Reference
@@ -267,7 +314,9 @@ cp -r agents/* ~/.claude/agents/
 
 ``` r
 # Always use native pipe
-data |> filter(x > 0) |> summarise(mean(y))
+data |>
+  filter(x > 0) |>
+  summarise(mean(y))
 
 # Modern joins with join_by()
 inner_join(x, y, by = join_by(a == b))
@@ -329,16 +378,22 @@ claude-code-r-skills/
 │       ├── r-package-development/
 │       ├── r-bayes/
 │       └── tdd-workflow/
+├── contexts/
+│   ├── dev.md                       # Coding mode (write first, TDD)
+│   ├── research.md                  # Exploration mode (read before acting)
+│   └── review.md                    # Audit mode (find issues, verdict)
 ├── rules/
 │   ├── security.md
 │   ├── testing.md
 │   └── git-workflow.md
 ├── commands/
 │   ├── plan.md
+│   ├── tdd.md
 │   ├── code-review.md
-│   └── tdd.md
+│   └── verify.md                    # Full quality gate before committing
 └── agents/
-    ├── planner.md
+    ├── planner.md                   # Uses Opus model
+    ├── tdd-guide.md                 # TDD enforcement specialist
     └── code-reviewer.md
 ```
 
@@ -352,6 +407,20 @@ Note: `r-machine-learning` skill is local-only and not included in the public re
 4.  **Follow tidyverse style guide** - Consistent naming and structure
 5.  **Test-driven development** - Write tests before implementation
 6.  **80% minimum coverage** - Comprehensive testing required
+
+## Recommended Workflow
+
+For any non-trivial feature or fix, follow this sequence:
+
+``` text
+@contexts/research.md   # Explore before acting
+/plan                   # Design the approach (uses Opus)
+@contexts/dev.md        # Switch to coding mode
+/tdd                    # Write tests first (RED)
+                        # Implement (GREEN → REFACTOR)
+/verify                 # Full quality gate before committing
+@contexts/review.md     # Final review if needed
+```
 
 ## Requirements
 

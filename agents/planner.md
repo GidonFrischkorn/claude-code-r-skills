@@ -1,6 +1,7 @@
 ---
 name: planner
 description: Expert planning specialist for R projects. Use for feature implementation, architectural changes, or complex refactoring. Automatically activated for planning tasks.
+model: opus
 tools: ["Read", "Grep", "Glob"]
 ---
 
