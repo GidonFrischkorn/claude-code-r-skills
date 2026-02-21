@@ -7,7 +7,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node -e \"let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const i=JSON.parse(d);const cmd=(i.tool_input?.command||'');if(/git\\s+push/.test(cmd)){console.error('[Hook] WARNING: About to run: '+cmd.trim());console.error('[Hook] Confirm this push is intentional before proceeding.')}}catch{}console.log(d)})\""
+            "command": "node .claude/hooks/scripts/git-push-warn.js"
           }
         ],
         "description": "Warn before git push to prevent accidental pushes"
@@ -17,7 +17,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node -e \"let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const i=JSON.parse(d);const p=i.tool_input?.file_path||'';if(/\\.(md|txt)$/.test(p)&&!/(README|CLAUDE|AGENTS|CONTRIBUTING|SKILL)\\.md$/.test(p)){console.error('[Hook] WARNING: Creating documentation file: '+p);console.error('[Hook] Consider consolidating docs in README.md or CLAUDE.md')}}catch{}console.log(d)})\""
+            "command": "node .claude/hooks/scripts/doc-blocker.js"
           }
         ],
         "description": "Warn about creating random .md files - keeps docs consolidated"

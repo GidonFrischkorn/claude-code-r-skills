@@ -1,6 +1,6 @@
 # Claude Code R Skills
 
-*Version 1.2.1 | Last updated: 2026-02-21*
+*Version 1.2.2 | Last updated: 2026-02-21*
 
 A curated collection of Claude Code configurations for modern R use. These skills, rules, commands, and agents help Claude Code understand R best practices and generate idiomatic, high-quality R code. Additionally the rules and commands help with efficient token usage and enforce constraints, and agents can perform specific tasks. Obviously you can fork and adapt any of these to your case-use.
 
