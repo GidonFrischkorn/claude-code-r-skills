@@ -1,5 +1,5 @@
 ---
-name: Bayesian inference in R
+name: r-bayes
 description: Patterns for Bayesian inference in R using brms, including multilevel models, DAG validation, and marginal effects. Use when performing Bayesian analysis.
 ---
 

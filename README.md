@@ -1,6 +1,6 @@
 # Claude Code R Skills
 
-*Version 1.2.0 | Last updated: 2026-02-21*
+*Version 1.2.1 | Last updated: 2026-02-21*
 
 A curated collection of Claude Code configurations for modern R use. These skills, rules, commands, and agents help Claude Code understand R best practices and generate idiomatic, high-quality R code. Additionally the rules and commands help with efficient token usage and enforce constraints, and agents can perform specific tasks. Obviously you can fork and adapt any of these to your case-use.
 
@@ -57,7 +57,7 @@ This repository provides Claude Code configurations specifically for R users, co
 
 ## Understanding Feature Types
 
-Claude Code uses five types of features to customise its behaviour for R development. Each serves a distinct purpose in the development workflow.
+Claude Code uses five official feature types to customise its behaviour for R development, plus a custom convention (Contexts) built on the CLI's `--system-prompt` flag. Each serves a distinct purpose in the development workflow.
 
 ### Skills
 
@@ -141,7 +141,7 @@ yes  # or "proceed" to start implementation
 
 **When to use:** Hooks run automatically in response to events - you don't invoke them directly. They're useful for context management, state persistence, and workflow optimisations.
 
-**How they work:** Hooks are configured in `.claude/hooks/hooks.json` with matchers that define when they trigger. Scripts execute and can modify Claude's behaviour or provide additional context.
+**How they work:** Hooks are configured in `hooks/hooks.json` (for plugin users) and `.claude/settings.json` (for repo development). Matchers use simple tool names (`"Bash"`, `"Write"`, `"Edit|Write"`, `"*"`). Script-based hooks reference files via `${CLAUDE_PLUGIN_ROOT}/.claude/hooks/scripts/`; simple hooks use inline `node -e` commands.
 
 **How to use:**
 
@@ -162,29 +162,32 @@ yes  # or "proceed" to start implementation
 
 ### Contexts
 
-**What they are:** Mode-switching markdown files that adjust Claude's behaviour for different phases of work — coding, exploring, or reviewing.
+**What they are:** Dynamic system prompt injection contexts — markdown files containing scenario-specific instructions passed to Claude at session start via the `--system-prompt` CLI flag.
 
-**When to use:** Reference a context file when you want to shift Claude's focus. Use `dev` when writing code, `research` when exploring unfamiliar territory, and `review` when auditing changes.
+**When to use:** Use a context alias when starting a session with a specific focus. Your `.claude/rules/` files handle baseline project rules; contexts layer scenario-specific behaviour on top.
 
-**How they work:** Context files live in `contexts/` and contain behavioural instructions, tool priorities, and checklists. Reference them with `@contexts/dev.md` in your conversation or CLAUDE.md.
+**How they work:** Shell aliases inject context files as system prompts when launching Claude — no tool call overhead, system-level authority.
 
 **How to use:**
 
 ``` bash
-# Switch to focused coding mode:
-@contexts/dev.md
+# Add to ~/.bashrc or ~/.zshrc
+alias claude-dev='claude --system-prompt "$(cat ~/.claude/contexts/dev.md)"'
+alias claude-review='claude --system-prompt "$(cat ~/.claude/contexts/review.md)"'
+alias claude-research='claude --system-prompt "$(cat ~/.claude/contexts/research.md)"'
 
-# Switch to thorough exploration mode:
-@contexts/research.md
-
-# Switch to quality review mode:
-@contexts/review.md
+# Launch Claude in the mode you need:
+claude-research    # Exploration mode
+claude-dev         # Implementation mode
+claude-review      # Code quality/security review
 ```
+
+> **Note:** For most workflows the difference between placing context in `.claude/rules/` and using the CLI `--system-prompt` approach is marginal. The CLI approach is faster (no tool call), more reliable (system-level authority), and slightly more token-efficient — but requires shell setup and may not be worth the overhead for everyone.
 
 **Recommended workflow sequence:**
 
 ```
-research → plan → tdd → dev → verify → review → commit
+claude-research → /plan → claude-dev → /tdd → implement → /verify → claude-review → commit
 ```
 
 ## Features
@@ -253,11 +256,13 @@ These hooks help optimise context window usage and workflow safety by:
 
 ### Contexts
 
+System prompt injection contexts — launch Claude with a specific focus using CLI aliases (`--system-prompt`).
+
 | Context      | Description                                        |
 |--------------|----------------------------------------------------|
-| **dev**      | Coding mode — write first, short responses, TDD defaults |
-| **research** | Exploration mode — thorough reading before acting  |
-| **review**   | Audit mode — find issues, rate by severity, verdict |
+| **dev**      | Implementation focus — write first, short responses, TDD defaults |
+| **research** | Exploration focus — thorough reading before acting  |
+| **review**   | Audit focus — find issues, rate by severity, verdict |
 
 ## Installation
 
@@ -418,13 +423,13 @@ Note: `r-machine-learning` skill is local-only and not included in the public re
 For any non-trivial feature or fix, follow this sequence:
 
 ``` text
-@contexts/research.md   # Explore before acting
-/plan                   # Design the approach (uses Opus)
-@contexts/dev.md        # Switch to coding mode
-/tdd                    # Write tests first (RED)
-                        # Implement (GREEN → REFACTOR)
-/verify                 # Full quality gate before committing
-@contexts/review.md     # Final review if needed
+claude-research    # Start in exploration mode
+/plan              # Design the approach (uses Opus)
+claude-dev         # Restart in implementation mode
+/tdd               # Write tests first (RED)
+                   # Implement (GREEN → REFACTOR)
+/verify            # Full quality gate before committing
+claude-review      # Restart in audit mode if needed
 ```
 
 ## Requirements

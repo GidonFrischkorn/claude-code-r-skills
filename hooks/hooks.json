@@ -1,35 +1,36 @@
 {
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "tool == \"Edit\" || tool == \"Write\"",
+        "matcher": "Bash",
         "hooks": [
           {
             "type": "command",
-            "command": "node .claude/hooks/scripts/suggest-compact.js"
+            "command": "node -e \"let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const i=JSON.parse(d);const cmd=(i.tool_input?.command||'');if(/git\\s+push/.test(cmd)){console.error('[Hook] WARNING: About to run: '+cmd.trim());console.error('[Hook] Confirm this push is intentional before proceeding.')}}catch{}console.log(d)})\""
           }
         ],
-        "description": "Suggest manual compaction at logical intervals"
+        "description": "Warn before git push to prevent accidental pushes"
       },
       {
-        "matcher": "tool == \"Write\" && tool_input.file_path matches \"\\\\.(md|txt)$\" && !(tool_input.file_path matches \"README\\\\.md|CLAUDE\\\\.md|AGENTS\\\\.md|CONTRIBUTING\\\\.md|SKILL\\\\.md\")",
+        "matcher": "Write",
         "hooks": [
           {
             "type": "command",
-            "command": "node -e \"const fs=require('fs');let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{const i=JSON.parse(d);const p=i.tool_input?.file_path||'';if(/\\.(md|txt)$/.test(p)&&!/(README|CLAUDE|AGENTS|CONTRIBUTING|SKILL)\\.md$/.test(p)){console.error('[Hook] WARNING: Creating documentation file: '+p);console.error('[Hook] Consider consolidating docs in README.md or CLAUDE.md')}console.log(d)})\""
+            "command": "node -e \"let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const i=JSON.parse(d);const p=i.tool_input?.file_path||'';if(/\\.(md|txt)$/.test(p)&&!/(README|CLAUDE|AGENTS|CONTRIBUTING|SKILL)\\.md$/.test(p)){console.error('[Hook] WARNING: Creating documentation file: '+p);console.error('[Hook] Consider consolidating docs in README.md or CLAUDE.md')}}catch{}console.log(d)})\""
           }
         ],
         "description": "Warn about creating random .md files - keeps docs consolidated"
       },
       {
-        "matcher": "tool == \"Bash\"",
+        "matcher": "Edit|Write",
         "hooks": [
           {
             "type": "command",
-            "command": "node -e \"let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{const i=JSON.parse(d);const cmd=(i.tool_input?.command||'');if(/git\\s+push/.test(cmd)){console.error('[Hook] WARNING: About to run: '+cmd.trim());console.error('[Hook] Confirm this push is intentional before proceeding.')}console.log(d)})\""
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/.claude/hooks/scripts/suggest-compact.js\""
           }
         ],
-        "description": "Warn before git push to prevent accidental pushes"
+        "description": "Suggest manual compaction at logical intervals"
       }
     ],
     "PreCompact": [
@@ -38,7 +39,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node .claude/hooks/scripts/pre-compact.js"
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/.claude/hooks/scripts/pre-compact.js\""
           }
         ],
         "description": "Save state before context compaction"
@@ -50,7 +51,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node .claude/hooks/scripts/session-start.js"
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/.claude/hooks/scripts/session-start.js\""
           }
         ],
         "description": "Load previous context on new session"
@@ -62,7 +63,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node .claude/hooks/scripts/session-end.js"
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/.claude/hooks/scripts/session-end.js\""
           }
         ],
         "description": "Persist session state on end"
