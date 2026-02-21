@@ -1,6 +1,6 @@
 # Claude Code R Skills
 
-*Last updated: 2026-02-20*
+*Version 1.2.0 | Last updated: 2026-02-21*
 
 A curated collection of Claude Code configurations for modern R use. These skills, rules, commands, and agents help Claude Code understand R best practices and generate idiomatic, high-quality R code. Additionally the rules and commands help with efficient token usage and enforce constraints, and agents can perform specific tasks. Obviously you can fork and adapt any of these to your case-use.
 
@@ -27,8 +27,10 @@ I use Positron, but if you are a VSCode user there is also a plugin for R langua
     -   [Key Anti-Patterns to Avoid](#key-anti-patterns-to-avoid)
 -   [Directory Structure](#directory-structure)
 -   [Core Principles](#core-principles)
+-   [Recommended Workflow](#recommended-workflow)
 -   [Requirements](#requirements)
 -   [Environment Management](#environment-management)
+-   [Token Optimization](#token-optimization)
 -   [License](#license)
 
 ## Acknowledgments
@@ -361,8 +363,9 @@ claude-code-r-skills/
 │   └── marketplace.json             # Marketplace catalog
 ├── .claude/
 │   ├── CLAUDE.md                    # Project instructions
+│   ├── settings.json                # Project-level hooks (for repo dev)
+│   ├── settings.local.json          # Local permissions (gitignored)
 │   ├── hooks/
-│   │   ├── hooks.json               # Hook configuration
 │   │   └── scripts/
 │   │       ├── utils.js             # Shared utilities
 │   │       ├── suggest-compact.js   # Strategic compaction
@@ -378,6 +381,8 @@ claude-code-r-skills/
 │       ├── r-package-development/
 │       ├── r-bayes/
 │       └── tdd-workflow/
+├── hooks/
+│   └── hooks.json                   # Plugin hooks (bundled with plugin)
 ├── contexts/
 │   ├── dev.md                       # Coding mode (write first, TDD)
 │   ├── research.md                  # Exploration mode (read before acting)
@@ -435,6 +440,58 @@ For any non-trivial feature or fix, follow this sequence:
 -   **R packages**: Use `pak` for installation
 -   **R environments**: Use `renv` for project isolation
 -   **Python**: Use `uv` for Python environments (if needed)
+
+## Token Optimization
+
+Claude Code usage can be expensive if you don't manage token consumption. These settings significantly reduce costs without sacrificing quality. Adapted from [Affaan Mustafa's Everything Claude Code](https://github.com/affaan-m/everything-claude-code).
+
+### Recommended Settings
+
+Add to `~/.claude/settings.json`:
+
+```json
+{
+  "model": "sonnet",
+  "env": {
+    "MAX_THINKING_TOKENS": "10000",
+    "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "50"
+  }
+}
+```
+
+| Setting | Default | Recommended | Impact |
+|---------|---------|-------------|--------|
+| `model` | opus | **sonnet** | ~60% cost reduction; handles 80%+ of coding tasks |
+| `MAX_THINKING_TOKENS` | 31,999 | **10,000** | ~70% reduction in hidden thinking cost per request |
+| `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE` | 95 | **50** | Compacts earlier — better quality in long sessions |
+
+Switch to Opus only when you need deep architectural reasoning:
+```
+/model opus
+```
+
+### Daily Workflow Commands
+
+| Command | When to Use |
+|---------|-------------|
+| `/model sonnet` | Default for most tasks |
+| `/model opus` | Complex architecture, debugging, deep reasoning |
+| `/clear` | Between unrelated tasks (free, instant reset) |
+| `/compact` | At logical task breakpoints (research done, milestone complete) |
+| `/cost` | Monitor token spending during session |
+
+### Strategic Compaction
+
+The `suggest-compact` hook (included in this plugin) suggests `/compact` at logical breakpoints instead of relying on auto-compaction at 95% context.
+
+**When to compact:**
+- After research/exploration, before implementation
+- After completing a milestone, before starting the next
+- After debugging, before continuing feature work
+- After a failed approach, before trying a new one
+
+**When NOT to compact:**
+- Mid-implementation (you'll lose variable names, file paths, partial state)
 
 ## License
 
