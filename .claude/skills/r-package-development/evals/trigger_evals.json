@@ -1,0 +1,17 @@
+[
+  {"query": "I'm building an R package for behavioral data analysis and want users to be able to use tidyverse pipelines with my functions. Should I add dplyr to Imports? I'm worried about dependency bloat", "should_trigger": true},
+  {"query": "I want to write a function in my R package that accepts a column name like my_fun(data, col = 'rt'). How do I design it to work with both bare names and strings, like dplyr verbs do?", "should_trigger": true},
+  {"query": "What's the best way to create custom error classes in my R package so downstream users can catch specific error types programmatically with tryCatch?", "should_trigger": true},
+  {"query": "I have an internal helper function in my package that does data validation. Should I add the same level of input checking as my exported functions, and what's the naming convention?", "should_trigger": true},
+  {"query": "I'm designing the API for my new psychtoolbox package. I have 3 main function types: fit, predict, and plot. What design principles should I follow to make the API consistent and pipe-friendly?", "should_trigger": true},
+  {"query": "My package needs to call a dplyr function internally. Should I add dplyr to Imports or can I avoid this dependency somehow?", "should_trigger": true},
+  {"query": "I want to use {{ }} in my package functions for tidy evaluation. Do I need to import the whole dplyr package or is there a lighter-weight way?", "should_trigger": true},
+  {"query": "How should I organize my package functions — should internal helpers live in separate files from exported functions and how do I mark something as internal properly?", "should_trigger": true},
+  {"query": "How do I document a function with roxygen2? I need @param, @return, @examples tags and want to export it with @export", "should_trigger": false},
+  {"query": "My R package has these R CMD check warnings: 'no visible binding for global variable x' and 'undefined global functions'. How do I fix them?", "should_trigger": false},
+  {"query": "I want to set up GitHub Actions CI for my R package so it runs R CMD check on macOS, Windows, and Ubuntu with the latest R release", "should_trigger": false},
+  {"query": "How do I use usethis to add a package dependency? I want to add the 'cli' package to my DESCRIPTION file", "should_trigger": false},
+  {"query": "I need to write a vignette for my R package explaining the main workflow. What format should I use and how do I add it with usethis?", "should_trigger": false},
+  {"query": "My package exports a data object. How do I document it with roxygen2 and include it in the package correctly?", "should_trigger": false},
+  {"query": "How do I use pkgdown to build a website for my R package and deploy it to GitHub Pages?", "should_trigger": false}
+]

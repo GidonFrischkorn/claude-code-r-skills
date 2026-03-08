@@ -1,0 +1,19 @@
+[
+  {"query": "I'm running a 14-day ESM study with 80 participants. I want to build a brms multilevel model but first I need to figure out what variables to adjust for — stress causes burnout, but neuroticism is a confounder. How do I define the DAG and identify the minimal adjustment set?", "should_trigger": true},
+  {"query": "How do I add random slopes for day-of-study in my brms model? I have 50 participants measured 10 times each and I want to model individual differences in change over time", "should_trigger": true},
+  {"query": "I've fit a brms logistic model predicting dropout from stress and sleep quality. I want the average marginal effect of stress on the probability scale, not the log-odds scale. How do I use marginaleffects to get this?", "should_trigger": true},
+  {"query": "need to center my predictors within-person before fitting my multilevel model in brms. i have a df with person_id, day, and several ESM items. what's the modern dplyr way to get person-mean and person-mean-deviation variables?", "should_trigger": true},
+  {"query": "I want to test whether yesterday's negative affect predicts today's rumination. My data has person_id and day columns. How do I create a lag-1 variable within person in R before fitting a cross-lagged brms model?", "should_trigger": true},
+  {"query": "My study has both participants and words as random factors — participants see multiple words and words are seen by multiple participants. What's the crossed random effects formula for brms?", "should_trigger": true},
+  {"query": "I defined a DAG using dagitty where trait anxiety mediates stress→burnout, with age as a covariate. How do I check what the implied conditional independencies are and test them against my data?", "should_trigger": true},
+  {"query": "After fitting my brms model I want to visualize predicted probabilities across the range of my predictor. How do I use plot_predictions() from marginaleffects to do this?", "should_trigger": true},
+  {"query": "How do I compare marginal slopes across two nested brms models — one with an interaction term and one without? I want to show how the effect of anxiety on performance changes when I add conscientiousness", "should_trigger": true},
+  {"query": "My Rhat values are all around 1.05 for the random effects parameters. What does this mean and how do I fix the convergence issues in my brms model?", "should_trigger": false},
+  {"query": "I want to compare two brms models — one with a main effect of stress and one with an interaction. How do I use loo_compare() to decide which one fits better?", "should_trigger": false},
+  {"query": "How do I report my Bayesian results in APA format? I have posterior medians, 95% CrIs, and pd values from my brms model", "should_trigger": false},
+  {"query": "What priors should I use for the fixed effects in a brms mixed model predicting reaction times? I want weakly informative priors that don't dominate the likelihood", "should_trigger": false},
+  {"query": "I want to check my priors before fitting the full model. How do I run a prior predictive check in brms to see if my priors generate reasonable RT distributions?", "should_trigger": false},
+  {"query": "My brms model has 3 divergent transitions. How do I diagnose whether this is a funnel geometry problem and fix it with non-centered parameterization?", "should_trigger": false},
+  {"query": "How do I interpret the WAIC and LOOIC from my brms model? My two models have ELPD difference of -4.2 with SE of 2.1", "should_trigger": false},
+  {"query": "I'm setting up a power analysis for my ESM study. I expect medium effect sizes for within-person slopes. How many participants and measurement occasions do I need?", "should_trigger": false}
+]

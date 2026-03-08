@@ -1,6 +1,6 @@
 ---
 name: r-bayes
-description: Patterns for Bayesian inference in R using brms, including multilevel models, DAG validation, and marginal effects. Use when performing Bayesian analysis.
+description: "Use this skill for any R question touching brms or the Bayesian multilevel workflow: writing random effects formulas (random intercepts, random slopes, crossed random effects), getting marginal effects on interpretable scales via marginaleffects, setting up lagged or person-centered variables in longitudinal/ESM data, identifying adjustment sets from DAGs with dagitty, or checking model diagnostics. Invoke whenever the user mentions brms by name, asks how to structure a multilevel formula, wants probability-scale effects from a Bayesian model, or needs to prepare time-series data before fitting a multilevel model — regardless of whether they frame it as Bayesian."
 ---
 
 ## Core Packages

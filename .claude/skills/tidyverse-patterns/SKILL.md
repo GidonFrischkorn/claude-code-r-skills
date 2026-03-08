@@ -1,6 +1,6 @@
 ---
 name: tidyverse-patterns
-description: Modern tidyverse patterns for R including pipes, joins, grouping, purrr, and stringr. Use when writing tidyverse R code.
+description: "Use this skill when users ask how to write modern, idiomatic tidyverse R code or want to update older patterns to current best practices. Especially relevant when users ask what's the modern/current way to do X in dplyr, or want to migrate legacy code. Covers dplyr 1.1+ APIs including join_by() syntax, inline .by grouping as an alternative to group_by/ungroup chains, across() for multi-column operations, native pipe |> migration from magrittr %>%, modern purrr patterns like list_rbind(), and stringr. Invoke any time a user is asking about current tidyverse conventions or trying to replace outdated R data manipulation patterns with contemporary equivalents."
 ---
 
 # Modern Tidyverse Patterns

@@ -1,6 +1,6 @@
 ---
 name: r-package-development
-description: R package development guide covering dependencies, API design, testing, and documentation. Use when developing R packages.
+description: "Use this skill for R package development questions involving design decisions and best practices: managing dependencies (when to use Imports vs Suggests, avoiding dependency bloat, tidyverse integration), designing user-facing APIs (tidy evaluation, non-standard evaluation, accepting bare column names vs strings), organizing code (internal helpers vs exported functions, file layout), error handling and custom error classes, input validation, testing strategies with testthat, and roxygen2 documentation. Invoke when a user is building or maintaining an R package and asking how to structure, design, or implement something within it — especially architectural trade-offs and R-package-specific conventions."
 ---
 
 # R Package Development Decision Guide

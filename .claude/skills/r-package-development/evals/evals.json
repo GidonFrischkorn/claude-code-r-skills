@@ -1,0 +1,70 @@
+{
+  "skill_name": "r-package-development",
+  "description": "Tests whether r-package-development triggers for API design, dependency strategy, error classes, and package architecture — and does NOT trigger for general package mechanics (roxygen2, R CMD check) that belong to r-package.",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I'm designing a new R package for behavioral data analysis. Should I add dplyr to Imports or keep it in Suggests? I want users to be able to use tidyverse pipelines with my functions.",
+      "expected_output": "Explains dependency strategy: avoid adding tidyverse to Imports, use base R internally, rlang if tidy eval needed, make functions pipe-friendly without requiring tidyverse",
+      "expectations": [
+        "Recommends against adding dplyr/tidyverse to Imports",
+        "Suggests using base R internally",
+        "Mentions rlang as the lightweight alternative for tidy evaluation",
+        "Explains pipe-friendly design without requiring pipe dependencies"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "How should I design a function in my package that accepts a column name from the user, like my_fun(data, col = 'rt')? I want it to work both with strings and with bare column names.",
+      "expected_output": "Shows rlang tidy evaluation approach with {{ }}, explains data-masking, shows importFrom rlang",
+      "expectations": [
+        "Uses rlang for tidy evaluation",
+        "Shows {{ }} embrace operator",
+        "Shows @importFrom rlang pattern (not full dplyr import)",
+        "Explains data-masking context"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "What's the best way to create custom error classes in my R package so users can catch specific errors programmatically?",
+      "expected_output": "Shows cli::cli_abort with class hierarchy, custom error constructor functions, call = caller_env()",
+      "expectations": [
+        "Uses cli::cli_abort() not stop()",
+        "Shows class hierarchy with c('specific_error', 'package_error')",
+        "Uses caller_env() for call argument",
+        "Shows example of user catching with tryCatch(class = 'specific_error')"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "I have a function in my package that I want to be internal (not exported). What's the convention and should I still validate its inputs?",
+      "expected_output": "Shows .prefix convention, @noRd for documentation, explains minimal validation for internal functions",
+      "expectations": [
+        "Shows . prefix naming convention for internal functions",
+        "Uses @noRd to suppress documentation",
+        "Explains that internal functions assume validated inputs",
+        "Contrasts with user-facing functions that need comprehensive validation"
+      ]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "id": 101,
+      "prompt": "How do I document a function with roxygen2 and add @export?",
+      "expected_skill": "r-package",
+      "reason": "roxygen2 documentation mechanics belong to r-package skill"
+    },
+    {
+      "id": 102,
+      "prompt": "My package has 3 R CMD check warnings, how do I fix the 'no visible binding for global variable' warning?",
+      "expected_skill": "r-package",
+      "reason": "R CMD check compliance belongs to r-package skill"
+    },
+    {
+      "id": 103,
+      "prompt": "How do I set up GitHub Actions for my R package to run R CMD check on multiple platforms?",
+      "expected_skill": "r-package",
+      "reason": "CI/CD setup belongs to r-package skill"
+    }
+  ]
+}

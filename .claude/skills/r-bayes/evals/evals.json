@@ -1,0 +1,90 @@
+{
+  "skill_name": "r-bayes",
+  "description": "Tests whether r-bayes triggers for DAG workflow, multilevel models, within-person centering, and marginaleffects — and does NOT trigger for diagnostics or model comparison (those go to bayesian-analysis).",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I need to define a causal DAG for my study where trait anxiety mediates the relationship between stress and burnout, with neuroticism as a confounder. How do I set this up and identify what to adjust for?",
+      "expected_output": "Creates dagitty DAG with node definitions, uses adjustmentSets() to identify confounders, validates with localTests(), visualizes with ggdag",
+      "expectations": [
+        "Uses dagitty() to define the DAG structure",
+        "Calls adjustmentSets() to identify adjustment sets",
+        "Mentions localTests() or impliedConditionalIndependencies() for validation",
+        "Uses ggdag for visualization"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I have an experience sampling study with 50 participants measured over 14 days. I want to add random slopes for time in my brms model and also center predictors within-person. Can you show me how?",
+      "expected_output": "Shows within-person centering with .by grouping, random slope formula syntax, and brms model call",
+      "expectations": [
+        "Shows person-mean centering creating _mean and _dev variables",
+        "Uses .by (not group_by/ungroup) for per-operation grouping",
+        "Shows random slopes formula: (1 + time | participant_id)",
+        "Provides complete brms model call"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "How do I use marginaleffects to get average marginal effects from my brms logistic regression on the probability scale? I want to compare effects across two models.",
+      "expected_output": "Shows avg_slopes() with type='response', predictions() with datagrid(), and how to compare across models",
+      "expectations": [
+        "Uses avg_slopes() with type = 'response' for probability scale",
+        "Shows predictions() with datagrid() for specific values",
+        "Demonstrates plot_predictions()",
+        "Shows how to compare slopes across models using bind_rows()"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "I want to test temporal precedence in my panel data. How do I create lagged predictors within person in R before fitting a brms model?",
+      "expected_output": "Shows lag() with .by grouping and arrange by time, then brms formula",
+      "expectations": [
+        "Uses arrange() before lag() to ensure correct order",
+        "Uses lag() with .by = participant_id (not group_by/ungroup)",
+        "Shows how lagged variable feeds into brms formula"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "What formula syntax do I use for crossed random effects in brms, where participants and items are both random factors?",
+      "expected_output": "Shows (1 | participant_id) + (1 | item_id) formula",
+      "expectations": [
+        "Shows crossed random effects formula with two separate random effect terms",
+        "Explains difference between crossed and nested random effects"
+      ]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "id": 101,
+      "prompt": "My Rhat values are 1.05 for some parameters. How do I fix convergence issues in my brms model?",
+      "expected_skill": "bayesian-analysis",
+      "reason": "Convergence diagnostics belong to bayesian-analysis skill"
+    },
+    {
+      "id": 102,
+      "prompt": "How do I compare two brms models using LOO-CV and interpret the ELPD difference?",
+      "expected_skill": "bayesian-analysis",
+      "reason": "Model comparison via LOO-CV belongs to bayesian-analysis skill"
+    },
+    {
+      "id": 103,
+      "prompt": "How do I report my Bayesian results following the BARG checklist in APA format?",
+      "expected_skill": "bayesian-analysis",
+      "reason": "Reporting guidelines belong to bayesian-analysis skill"
+    },
+    {
+      "id": 104,
+      "prompt": "What priors should I use for my random effects in a brms model? What are weakly informative choices?",
+      "expected_skill": "bayesian-analysis",
+      "reason": "Prior specification strategies belong to bayesian-analysis skill"
+    },
+    {
+      "id": 105,
+      "prompt": "Show me how to do a prior predictive check in brms before fitting my model",
+      "expected_skill": "bayesian-analysis",
+      "reason": "Prior predictive checks are in bayesian-analysis skill"
+    }
+  ]
+}

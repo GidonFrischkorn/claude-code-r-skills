@@ -1,0 +1,18 @@
+[
+  {"query": "I've been joining two data frames with by = c('subject_id' = 'id') for years. I heard there's a newer join_by() syntax in dplyr 1.1. Can you show me how to update my joins?", "should_trigger": true},
+  {"query": "I have a big analysis script full of %>% pipes from magrittr. I want to migrate everything to the native R pipe |> and also update any other deprecated dplyr patterns like group_by/ungroup", "should_trigger": true},
+  {"query": "what's the modern dplyr way to compute a grouped mean without using group_by() and then having to remember ungroup() at the end? I keep forgetting the ungroup and it causes bugs downstream", "should_trigger": true},
+  {"query": "I used to write map_dfr() to apply a function to a list and row-bind the results. I see this is deprecated now. What's the replacement in modern purrr?", "should_trigger": true},
+  {"query": "I'm writing a function that takes a data frame and a column name as an argument, then computes a summarise. How do I handle the column name argument so it works with dplyr's data masking?", "should_trigger": true},
+  {"query": "I have code like: df %>% group_by(participant, condition) %>% summarise(mean_rt = mean(rt)) %>% ungroup(). Help me modernize this to current dplyr style", "should_trigger": true},
+  {"query": "what's the tidyr way to split a character column by delimiter and pivot the resulting pieces into separate columns? I have a 'condition_block' column like 'congruent_1' that I want to split into 'condition' and 'block'", "should_trigger": true},
+  {"query": "I want to apply a function across multiple columns — say compute the mean and sd of all columns that start with 'rt_'. What's the across() pattern for this in dplyr?", "should_trigger": true},
+  {"query": "I need to import a .sav SPSS file from our lab server, check for missing values, and create a summary table of demographics by condition group for our preregistered analysis", "should_trigger": false},
+  {"query": "Can you make a ggplot2 figure showing RT distributions split by condition? I want violin plots with individual data points overlaid, using colorblind-friendly colors", "should_trigger": false},
+  {"query": "I have a wide-format data frame where each trial is a column (trial_1, trial_2, ... trial_80). I need to reshape it to long format for a mixed ANOVA in R", "should_trigger": false},
+  {"query": "How do I set up a brms multilevel model for my repeated measures data? I have subjects nested in groups and I want random intercepts for both", "should_trigger": false},
+  {"query": "I want to create an APA-style results table from my regression output. What package should I use and how do I format the p-values correctly?", "should_trigger": false},
+  {"query": "how do I read in multiple CSV files from a folder and combine them into one data frame in R? each file is one participant's data", "should_trigger": false},
+  {"query": "I need to do a within-person centering of my ESM predictors before fitting my multilevel model. What's the dplyr code for computing person-means and deviations?", "should_trigger": false},
+  {"query": "My data frame has reaction times in milliseconds. I need to filter out RTs below 150ms and above 2500ms, then z-score within participant. Write me the cleaning pipeline", "should_trigger": false}
+]

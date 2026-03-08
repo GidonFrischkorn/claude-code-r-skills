@@ -1,0 +1,77 @@
+{
+  "skill_name": "tidyverse-patterns",
+  "description": "Tests whether tidyverse-patterns triggers for modern dplyr 1.1+ syntax, pipe migration, join_by(), and .by — and does NOT trigger for general data analysis tasks (ggplot2, data import) that belong to r-data-analysis.",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "How do I use join_by() for my merges? I've been using by = c('subject_id' = 'id') and I know there's a newer syntax.",
+      "expected_output": "Shows join_by() syntax as replacement for old named-vector syntax, with examples",
+      "expectations": [
+        "Shows join_by(subject_id == id) syntax",
+        "Contrasts with old by = c('subject_id' = 'id') syntax and marks it as deprecated",
+        "Provides practical example with realistic column names"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I have a bunch of old dplyr pipelines using the magrittr pipe %>%. Can you help me migrate them to use the native R pipe |> and update any other deprecated patterns?",
+      "expected_output": "Migrates %>% to |>, updates group_by/ungroup to .by, updates old join syntax to join_by, updates map_dfr to map/list_rbind",
+      "expectations": [
+        "Replaces all %>% with |>",
+        "Replaces group_by() + ungroup() with .by argument",
+        "Updates join syntax to join_by()",
+        "Notes any map_dfr() calls that should become map() |> list_rbind()"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "What's the modern way to do a grouped summarise in dplyr without using group_by and ungroup?",
+      "expected_output": "Shows .by argument in summarise(), explains it's per-operation and avoids ungroup()",
+      "expectations": [
+        "Shows summarise(..., .by = group_var) syntax",
+        "Explains that .by eliminates the need for group_by() and ungroup()",
+        "Notes this is dplyr 1.1+ feature"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "I want to iterate over a list of data frames, fit a model to each one, and combine the results. What's the modern purrr approach?",
+      "expected_output": "Shows map() with list_rbind() instead of deprecated map_dfr()",
+      "expectations": [
+        "Uses map() not map_dfr()",
+        "Uses list_rbind() to combine results",
+        "Shows nest/unnest pattern as alternative"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "How do I write a function that accepts a column name as an argument and uses it in a dplyr summarise?",
+      "expected_output": "Shows {{ }} embracing for data-masking in function arguments",
+      "expectations": [
+        "Uses {{ var }} embrace operator",
+        "Explains data-masking context",
+        "Provides working function example"
+      ]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "id": 101,
+      "prompt": "I need to import an SPSS file and create a summary table of response times by condition. The file has labelled columns.",
+      "expected_skill": "r-data-analysis",
+      "reason": "Data import and analysis workflows belong to r-data-analysis skill"
+    },
+    {
+      "id": 102,
+      "prompt": "Make me a publication-quality ggplot figure with colorblind-safe colors showing RT distributions by condition",
+      "expected_skill": "r-data-analysis",
+      "reason": "ggplot2 visualization belongs to r-data-analysis skill"
+    },
+    {
+      "id": 103,
+      "prompt": "How do I reshape my data from wide to long format for a repeated measures analysis?",
+      "expected_skill": "r-data-analysis",
+      "reason": "pivot_longer/pivot_wider covered in r-data-analysis skill"
+    }
+  ]
+}
